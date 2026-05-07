@@ -18,8 +18,10 @@ public class MemberController {
 
     @GetMapping("/users/me")
     public ApiResponse<MemberResDTO.GetInfo> getInfo(){
+        Long memberId = 1L; // TODO: memberId from access token
         BaseSuccessCode code = MemberSuccessCode.MEMBER_VIEW;
-        return ApiResponse.onSuccess(code, null);
+        MemberResDTO.GetInfo response = memberService.getInfo(memberId);
+        return ApiResponse.onSuccess(code, response);
     }
 
     @GetMapping("/home")
