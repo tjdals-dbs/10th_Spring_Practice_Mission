@@ -19,9 +19,9 @@ public class ReviewController {
     @PostMapping(value = "/stores/{storeId}/reviews")
     public ApiResponse<ReviewResDTO.CreateReview> createReview(
             @PathVariable Long storeId,
-            @RequestParam Long memberId,
             @ModelAttribute ReviewReqDTO.CreateReview request
             ){
+        Long memberId = 1L; // TODO: take memberId from access token(?)
         BaseSuccessCode code = ReviewSuccessCode.REVIEW_WRITE;
         ReviewResDTO.CreateReview response = reviewService.createReview(storeId, memberId, request);
         return ApiResponse.onSuccess(code, response);

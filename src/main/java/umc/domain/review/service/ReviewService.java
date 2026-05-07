@@ -4,14 +4,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import umc.domain.member.entity.Member;
 import umc.domain.member.repository.MemberRepository;
+import umc.domain.review.converter.ReviewConverter;
 import umc.domain.review.dto.ReviewReqDTO;
 import umc.domain.review.dto.ReviewResDTO;
 import umc.domain.review.entity.Review;
 import umc.domain.review.repository.ReviewRepository;
 import umc.domain.store.entity.Store;
 import umc.domain.store.repository.StoreRepository;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -41,11 +40,6 @@ public class ReviewService {
 
         Review savedReview = reviewRepository.save(review);
 
-        return ReviewResDTO.CreateReview.builder()
-                .reviewId(savedReview.getId())
-                .content(savedReview.getContent())
-                .rating(savedReview.getRating())
-                .imageUrls(List.of())
-                .build();
+        return ReviewConverter.toCreateReview(savedReview);
     }
 }
