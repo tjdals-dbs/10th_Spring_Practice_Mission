@@ -19,7 +19,7 @@ public class MissionConverter {
                 .storeId(store.getId())
                 .storeName(store.getName())
                 .missionContent(mission.getContent())
-                .rewardPoint(Math.toIntExact(mission.getRewardPoint()))
+                .rewardPoint(mission.getRewardPoint())
                 .status(memberMission.getStatus())
                 .dueDate(mission.getEnd_at())
                 .build();

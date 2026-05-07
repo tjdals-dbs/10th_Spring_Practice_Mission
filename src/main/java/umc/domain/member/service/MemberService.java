@@ -1,22 +1,64 @@
 package umc.domain.member.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import umc.domain.category.repository.StoreCategoryRepository;
 import umc.domain.member.converter.MemberConverter;
 import umc.domain.member.dto.MemberResDTO;
 import umc.domain.member.entity.Member;
 import umc.domain.member.repository.MemberRepository;
+import umc.domain.mission.entity.Mission;
+import umc.domain.mission.enums.MemberMissionStatus;
+import umc.domain.mission.repository.MemberMissionRepository;
+import umc.domain.mission.repository.MissionRepository;
+import umc.domain.store.entity.Region;
+import umc.domain.store.repository.RegionRepository;
+
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class MemberService {
 
     private final MemberRepository memberRepository;
+    private final MissionRepository missionRepository;
+    private final RegionRepository regionRepository;
+    private final MemberMissionRepository memberMissionRepository;
+    private final StoreCategoryRepository storeCategoryRepository;
 
     public MemberResDTO.GetInfo getInfo(Long memberId) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow();
 
         return MemberConverter.toGetInfo(member);
+    }
+
+    public MemberResDTO.Home getHome(Long memberId, Long regionId, Integer page){
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow();
+        Region region = regionRepository.findById(regionId)
+                .orElseThrow();
+
+        Pageable pageable = PageRequest.of(page, 10);
+        Page<Mission> missions = missionRepository.findHomeMissions(regionId, pageable);
+
+        Map<Long, String> storeCategoryMap = missions.getContent().stream()
+                .map(mission -> mission.getStore().getId())
+                .distinct()
+                .collect(Collectors.toMap(
+                        storeId -> storeId,
+                        storeId -> String.join(", ", storeCategoryRepository.findCategoryNamesByStoreId(storeId))
+                ));
+
+        int completedMissionCount = memberMissionRepository.countByMemberIdAndStatus(
+                memberId,
+                MemberMissionStatus.COMPLETED
+        );
+
+        return MemberConverter.toHome(member, region, missions, completedMissionCount, storeCategoryMap);
     }
 }

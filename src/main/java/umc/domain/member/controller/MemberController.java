@@ -25,9 +25,14 @@ public class MemberController {
     }
 
     @GetMapping("/home")
-    public ApiResponse<MemberResDTO.Home> getHome(){
+    public ApiResponse<MemberResDTO.Home> getHome(
+            @RequestParam Long regionId,
+            @RequestParam(defaultValue = "0") Integer page
+    ){
+        Long memberId = 1L; // TODO: memberId from access token
         BaseSuccessCode code = MemberSuccessCode.MEMBER_VIEW;
-        return ApiResponse.onSuccess(code, null);
+        MemberResDTO.Home response = memberService.getHome(memberId, regionId, page);
+        return ApiResponse.onSuccess(code, response);
     }
 
     @PostMapping("/users")

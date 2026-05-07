@@ -32,4 +32,6 @@ public interface MemberMissionRepository extends JpaRepository<MemberMission, Lo
             @Param("statuses") List<MemberMissionStatus> statuses,
             Pageable pageable
             );
+
+    int countByMemberIdAndStatus(Long memberId, MemberMissionStatus status);
 }

@@ -20,7 +20,7 @@ public class MissionResDTO {
             String storeName,
             String storeCategory,
             String missionContent,
-            Integer rewardPoint,
+            Long rewardPoint,
             MemberMissionStatus status,
             LocalDate dueDate
     ) {}
