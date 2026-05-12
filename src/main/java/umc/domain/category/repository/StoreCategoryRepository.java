@@ -10,9 +10,11 @@ import java.util.List;
 public interface StoreCategoryRepository extends JpaRepository<StoreCategory, Long> {
 
     @Query("""
-            select sc.foodCategory.name
-            from StoreCategory sc
-            where sc.store.id = :storeId
-            """)
-    List<String> findCategoryNamesByStoreId(@Param("storeId") Long storeId);
+        select sc
+        from StoreCategory sc
+        join fetch sc.store
+        join fetch sc.foodCategory
+        where sc.store.id in :storeIds
+        """)
+    List<StoreCategory> findAllByStoreIdsWithFoodCategory(@Param("storeIds") List<Long> storeIds);
 }

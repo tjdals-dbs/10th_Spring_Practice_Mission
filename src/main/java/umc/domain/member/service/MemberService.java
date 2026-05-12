@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import umc.domain.category.entity.mapping.StoreCategory;
 import umc.domain.category.repository.StoreCategoryRepository;
 import umc.domain.member.converter.MemberConverter;
 import umc.domain.member.dto.MemberResDTO;
@@ -21,6 +22,7 @@ import umc.domain.store.exception.StoreException;
 import umc.domain.store.exception.code.StoreErrorCode;
 import umc.domain.store.repository.RegionRepository;
 
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -50,13 +52,26 @@ public class MemberService {
         Pageable pageable = PageRequest.of(page, 10);
         Page<Mission> missions = missionRepository.findHomeMissions(regionId, pageable);
 
-        Map<Long, String> storeCategoryMap = missions.getContent().stream()
+        List<Long> storeIds = missions.getContent().stream()
                 .map(mission -> mission.getStore().getId())
                 .distinct()
-                .collect(Collectors.toMap(
-                        storeId -> storeId,
-                        storeId -> String.join(", ", storeCategoryRepository.findCategoryNamesByStoreId(storeId))
-                ));
+                .toList();
+
+        Map<Long, String> storeCategoryMap = Map.of();
+
+        if(!storeIds.isEmpty()){
+            List<StoreCategory> storeCategories =
+                    storeCategoryRepository.findAllByStoreIdsWithFoodCategory(storeIds);
+
+            storeCategoryMap = storeCategories.stream()
+                    .collect(Collectors.groupingBy(
+                            storeCategory -> storeCategory.getStore().getId(),
+                            Collectors.mapping(
+                                    storeCategory -> storeCategory.getFoodCategory().getName(),
+                                    Collectors.joining(", ")
+                            )
+                    ));
+        }
 
         int completedMissionCount = memberMissionRepository.countByMemberIdAndStatus(
                 memberId,
