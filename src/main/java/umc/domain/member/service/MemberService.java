@@ -9,12 +9,16 @@ import umc.domain.category.repository.StoreCategoryRepository;
 import umc.domain.member.converter.MemberConverter;
 import umc.domain.member.dto.MemberResDTO;
 import umc.domain.member.entity.Member;
+import umc.domain.member.exception.MemberException;
+import umc.domain.member.exception.code.MemberErrorCode;
 import umc.domain.member.repository.MemberRepository;
 import umc.domain.mission.entity.Mission;
 import umc.domain.mission.enums.MemberMissionStatus;
 import umc.domain.mission.repository.MemberMissionRepository;
 import umc.domain.mission.repository.MissionRepository;
 import umc.domain.store.entity.Region;
+import umc.domain.store.exception.StoreException;
+import umc.domain.store.exception.code.StoreErrorCode;
 import umc.domain.store.repository.RegionRepository;
 
 import java.util.Map;
@@ -32,16 +36,16 @@ public class MemberService {
 
     public MemberResDTO.GetInfo getInfo(Long memberId) {
         Member member = memberRepository.findById(memberId)
-                .orElseThrow();
+                .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
 
         return MemberConverter.toGetInfo(member);
     }
 
     public MemberResDTO.Home getHome(Long memberId, Long regionId, Integer page){
         Member member = memberRepository.findById(memberId)
-                .orElseThrow();
+                .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
         Region region = regionRepository.findById(regionId)
-                .orElseThrow();
+                .orElseThrow(() -> new StoreException((StoreErrorCode.REGION_NOT_FOUND)));
 
         Pageable pageable = PageRequest.of(page, 10);
         Page<Mission> missions = missionRepository.findHomeMissions(regionId, pageable);
