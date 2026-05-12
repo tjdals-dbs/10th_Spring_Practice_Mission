@@ -38,7 +38,7 @@ public class Mission {
     private LocalDate startedAt;
 
     @Column(name = "end_at", nullable = false)
-    private LocalDate end_at;
+    private LocalDate endAt;
 
     @Column(name = "is_active", nullable = false)
     private boolean isActive;
