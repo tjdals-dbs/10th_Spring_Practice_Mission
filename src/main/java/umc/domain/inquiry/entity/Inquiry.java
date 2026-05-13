@@ -6,6 +6,9 @@ import umc.domain.inquiry.enums.InquiryStatus;
 import umc.domain.member.entity.Member;
 import umc.global.entity.BaseEntity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter
 @Builder
@@ -31,5 +34,11 @@ public class Inquiry extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
+
+    @OneToMany(mappedBy = "inquiry", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<InquiryPhoto> inquiryPhotos = new ArrayList();
+
+    @OneToOne(mappedBy = "inquiry", cascade = CascadeType.ALL, orphanRemoval = true)
+    private InquiryReply inquiryReply;
 
 }
