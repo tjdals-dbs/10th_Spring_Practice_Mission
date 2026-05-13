@@ -39,6 +39,7 @@ public class Review extends BaseEntity {
     private Store store;
 
     @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     private List<ReviewPhoto> reviewPhotos = new ArrayList();
 
     @OneToOne(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true)

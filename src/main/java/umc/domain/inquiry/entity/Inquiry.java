@@ -36,6 +36,7 @@ public class Inquiry extends BaseEntity {
     private Member member;
 
     @OneToMany(mappedBy = "inquiry", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     private List<InquiryPhoto> inquiryPhotos = new ArrayList();
 
     @OneToOne(mappedBy = "inquiry", cascade = CascadeType.ALL, orphanRemoval = true)
