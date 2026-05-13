@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import umc.domain.category.entity.mapping.StoreCategory;
 import umc.domain.category.repository.StoreCategoryRepository;
 import umc.domain.member.converter.MemberConverter;
@@ -36,6 +37,7 @@ public class MemberService {
     private final MemberMissionRepository memberMissionRepository;
     private final StoreCategoryRepository storeCategoryRepository;
 
+    @Transactional(readOnly = true)
     public MemberResDTO.GetInfo getInfo(Long memberId) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
@@ -43,6 +45,7 @@ public class MemberService {
         return MemberConverter.toGetInfo(member);
     }
 
+    @Transactional(readOnly = true)
     public MemberResDTO.Home getHome(Long memberId, Long regionId, Integer page){
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));

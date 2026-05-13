@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import umc.domain.mission.converter.MissionConverter;
 import umc.domain.mission.dto.MissionResDTO;
 import umc.domain.mission.entity.mapping.MemberMission;
@@ -19,6 +20,7 @@ public class MissionService {
 
     private final MemberMissionRepository memberMissionRepository;
 
+    @Transactional(readOnly = true)
     public MissionResDTO.GetMissions getMissions(
             Long memberId,
             List<MemberMissionStatus> statuses,
