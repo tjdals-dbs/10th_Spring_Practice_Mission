@@ -16,7 +16,7 @@ public class ReviewController {
 
     private final ReviewService reviewService;
 
-    @PostMapping(value = "/stores/{storeId}/reviews")
+    @PostMapping("/stores/{storeId}/reviews")
     public ApiResponse<ReviewResDTO.CreateReview> createReview(
             @PathVariable Long storeId,
             @RequestBody ReviewReqDTO.CreateReview request
@@ -25,5 +25,16 @@ public class ReviewController {
         BaseSuccessCode code = ReviewSuccessCode.REVIEW_WRITE;
         ReviewResDTO.CreateReview response = reviewService.createReview(storeId, memberId, request);
         return ApiResponse.onSuccess(code, response);
+    }
+
+    @GetMapping("/reviews")
+    public ApiResponse<ReviewResDTO.PaginationCursor<ReviewResDTO.GetMyReview>> getMyReviews(
+            @RequestParam Integer pageSize,
+            @RequestParam String cursor,
+            @RequestParam String query
+    ) {
+        Long memberId = 1L; // TODO: Get memberId from accessToken
+        BaseSuccessCode code = ReviewSuccessCode.VIEW_REVIEW;
+        return ApiResponse.onSuccess(code, reviewService.getMyReviews(memberId, pageSize, cursor, query ));
     }
 }
