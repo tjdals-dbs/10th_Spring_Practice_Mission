@@ -36,7 +36,7 @@ public class MissionController {
     public ApiResponse<MissionResDTO.UpdateMissionStatus>
     updateMissionsStatus(
             @PathVariable Long memberMissionId,
-            @RequestBody MissionReqDTO.UpdateMissionStatus request
+            @RequestBody @Valid MissionReqDTO.UpdateMissionStatus request
             ) {
         BaseSuccessCode code = MissionSuccessCode.STATUS_UPDATED;
         return ApiResponse.onSuccess(code, null);
@@ -79,7 +79,7 @@ public class MissionController {
 
     @PostMapping("/member-mission/in-progress")
     public ApiResponse<MissionResDTO.PaginationOffset<MissionResDTO.MissionPreview>> getMyMissionsInProgress(
-            @RequestBody MissionReqDTO.GetMyMissionInProgress dto
+            @RequestBody @Valid MissionReqDTO.GetMyMissionInProgress dto
     ){
         BaseSuccessCode code = MissionSuccessCode.MISSION_VIEW;
         return ApiResponse.onSuccess(code,

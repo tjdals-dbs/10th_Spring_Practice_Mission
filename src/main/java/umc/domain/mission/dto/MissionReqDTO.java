@@ -9,7 +9,7 @@ import java.time.LocalDate;
 public class MissionReqDTO {
 
     public record UpdateMissionStatus(
-            MemberMissionStatus status
+            @NotNull MemberMissionStatus status
     ) {}
 
     public record CreateMission(
@@ -23,8 +23,8 @@ public class MissionReqDTO {
 
     // 진행중인 미션 조회용
     public record GetMyMissionInProgress(
-            Long memberId,
-            Integer pageNumber,
-            Integer pageSize
+            @NotNull Long memberId,
+            @NotNull Integer pageNumber,
+            @NotNull Integer pageSize
     ) {}
 }

@@ -1,5 +1,6 @@
 package umc.domain.review.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import umc.domain.review.dto.ReviewReqDTO;
@@ -19,7 +20,7 @@ public class ReviewController {
     @PostMapping("/stores/{storeId}/reviews")
     public ApiResponse<ReviewResDTO.CreateReview> createReview(
             @PathVariable Long storeId,
-            @RequestBody ReviewReqDTO.CreateReview request
+            @RequestBody @Valid ReviewReqDTO.CreateReview request
             ){
         Long memberId = 1L; // TODO: take memberId from access token(?)
         BaseSuccessCode code = ReviewSuccessCode.REVIEW_WRITE;
